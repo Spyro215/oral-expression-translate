@@ -1,0 +1,32 @@
+{
+  "name": "oral-expression-translate",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Windows desktop floating translator for idiomatic English expressions.",
+  "main": "dist/main/main/main.js",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "electron:dev": "cross-env NODE_ENV=development concurrently -k \"vite --host 127.0.0.1\" \"wait-on http://127.0.0.1:5173 && tsc -p tsconfig.main.json && pnpm exec electron .\"",
+    "build": "tsc -p tsconfig.main.json && vite build",
+    "start": "electron .",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.main.json"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^5.0.0",
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
+    "lucide-react": "^0.468.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tesseract.js": "^6.0.0",
+    "vite": "^7.0.0",
+    "wait-on": "^8.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "electron": "37.10.3",
+    "typescript": "^5.8.0"
+  }
+}
