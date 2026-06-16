@@ -50,6 +50,33 @@ textarea {
   gap: 6px;
 }
 
+.titlebarRight {
+  -webkit-app-region: no-drag;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.windowControls {
+  display: flex;
+  gap: 2px;
+  padding-left: 4px;
+  border-left: 1px solid #dfe1d7;
+  margin-left: 2px;
+}
+
+.winCtrlBtn {
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
+}
+
+.winCtrlClose:hover {
+  background: #d92d2d;
+  border-color: #d92d2d;
+  color: #fff;
+}
+
 .iconButton {
   width: 34px;
   height: 34px;

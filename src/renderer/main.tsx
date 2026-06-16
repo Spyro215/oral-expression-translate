@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { Clipboard, Copy, History, Loader2, ScanLine, Search, Settings, Star, Trash2, X } from "lucide-react";
+import { Clipboard, Copy, History, Loader2, Minus, ScanLine, Search, Settings, Star, Trash2, X } from "lucide-react";
 import type { AppSettings, AppView, HistoryItem } from "../shared/types";
 import "./styles.css";
 
@@ -31,17 +31,27 @@ function Titlebar({ view, setView }: { view: AppView; setView: (view: AppView) =
   return (
     <header className="titlebar">
       <div className="brand">Oral Translate</div>
-      <nav>
-        <button className={view === "result" ? "active iconButton" : "iconButton"} onClick={() => open("result")} title="翻译">
-          <ScanLine size={18} />
-        </button>
-        <button className={view === "history" ? "active iconButton" : "iconButton"} onClick={() => open("history")} title="历史">
-          <History size={18} />
-        </button>
-        <button className={view === "settings" ? "active iconButton" : "iconButton"} onClick={() => open("settings")} title="设置">
-          <Settings size={18} />
-        </button>
-      </nav>
+      <div className="titlebarRight">
+        <nav>
+          <button className={view === "result" ? "active iconButton" : "iconButton"} onClick={() => open("result")} title="翻译">
+            <ScanLine size={18} />
+          </button>
+          <button className={view === "history" ? "active iconButton" : "iconButton"} onClick={() => open("history")} title="历史">
+            <History size={18} />
+          </button>
+          <button className={view === "settings" ? "active iconButton" : "iconButton"} onClick={() => open("settings")} title="设置">
+            <Settings size={18} />
+          </button>
+        </nav>
+        <div className="windowControls">
+          <button className="iconButton winCtrlBtn" onClick={() => window.appApi.minimizeWindow()} title="最小化">
+            <Minus size={16} />
+          </button>
+          <button className="iconButton winCtrlBtn winCtrlClose" onClick={() => window.appApi.quitApp()} title="退出">
+            <X size={16} />
+          </button>
+        </div>
+      </div>
     </header>
   );
 }

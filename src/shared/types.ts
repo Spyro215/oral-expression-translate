@@ -66,6 +66,8 @@ export interface AppApi {
   openView: (view: AppView) => Promise<void>;
   closeCapture: () => Promise<void>;
   showResultWindow: () => Promise<void>;
+  minimizeWindow: () => Promise<void>;
+  quitApp: () => Promise<void>;
   copyText: (text: string) => Promise<void>;
   onCaptureStarted: (callback: () => void) => () => void;
 }

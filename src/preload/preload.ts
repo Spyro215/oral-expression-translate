@@ -14,6 +14,8 @@ const api: AppApi = {
   openView: (view: AppView) => ipcRenderer.invoke("view:open", view),
   closeCapture: () => ipcRenderer.invoke("capture:close"),
   showResultWindow: () => ipcRenderer.invoke("window:show-result"),
+  minimizeWindow: () => ipcRenderer.invoke("window:minimize"),
+  quitApp: () => ipcRenderer.invoke("app:quit"),
   copyText: (text: string) => ipcRenderer.invoke("clipboard:write", text),
   onCaptureStarted: (callback: () => void) => {
     const listener = () => callback();

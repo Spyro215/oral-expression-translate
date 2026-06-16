@@ -9,7 +9,34 @@
     "electron:dev": "cross-env NODE_ENV=development concurrently -k \"vite --host 127.0.0.1\" \"wait-on http://127.0.0.1:5173 && tsc -p tsconfig.main.json && pnpm exec electron .\"",
     "build": "tsc -p tsconfig.main.json && vite build",
     "start": "electron .",
-    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.main.json"
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.main.json",
+    "pack": "pnpm build && electron-builder --dir",
+    "dist": "pnpm build && electron-builder --win"
+  },
+  "build": {
+    "appId": "com.local.oral-expression-translate",
+    "productName": "Oral Expression Translate",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "eng.traineddata",
+        "to": "eng.traineddata"
+      }
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "language": "2052"
+    }
   },
   "dependencies": {
     "@vitejs/plugin-react": "^5.0.0",
@@ -27,6 +54,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "electron": "37.10.3",
+    "electron-builder": "^26.15.3",
     "typescript": "^5.8.0"
   }
 }

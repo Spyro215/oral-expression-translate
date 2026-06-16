@@ -1,4 +1,5 @@
 import path from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { app, BrowserWindow, clipboard, desktopCapturer, globalShortcut, ipcMain, Menu, nativeImage, screen, Tray } from "electron";
 import { createWorker } from "tesseract.js";
 import type { AppView } from "../shared/types";
@@ -21,7 +22,7 @@ function preloadPath() {
 
 function rendererUrl(view: AppView) {
   if (isDev) return `${devUrl}?view=${view}`;
-  return `file://${path.join(__dirname, "../renderer/index.html")}?view=${view}`;
+  return `${pathToFileURL(path.join(__dirname, "../../renderer/index.html")).href}?view=${view}`;
 }
 
 async function createResultWindow(view: AppView = "result") {
@@ -158,11 +159,16 @@ function setupIpc() {
   ipcMain.handle("capture:start", () => createCaptureWindow());
   ipcMain.handle("capture:close", () => captureWindow?.close());
   ipcMain.handle("window:show-result", () => createResultWindow("result"));
+  ipcMain.handle("window:minimize", () => resultWindow?.minimize());
+  ipcMain.handle("app:quit", () => { isQuitting = true; app.quit(); });
   ipcMain.handle("view:open", (_event, view: AppView) => createResultWindow(view));
   ipcMain.handle("clipboard:write", (_event, text: string) => clipboard.writeText(text));
 
   ipcMain.handle("ocr:image", async (_event, imageDataUrl: string) => {
-    const worker = await createWorker("eng");
+    const langPath = app.isPackaged
+      ? process.resourcesPath
+      : path.join(__dirname, "../../..");
+    const worker = await createWorker("eng", undefined, { langPath });
     try {
       const result = await worker.recognize(imageDataUrl);
       return {
