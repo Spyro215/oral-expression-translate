@@ -171,11 +171,13 @@ function setupIpc() {
   ipcMain.handle("clipboard:write", (_event, text: string) => clipboard.writeText(text));
 
   ipcMain.handle("ocr:image", async (_event, imageDataUrl: string) => {
-    let langPath: string;
+    let langPath: string | undefined;
     if (app.isPackaged) {
-      // Try bundled traineddata first; if missing, use userData so tesseract can auto-download
       const bundled = path.join(process.resourcesPath, "eng.traineddata");
-      langPath = fs.existsSync(bundled) ? process.resourcesPath : path.join(app.getPath("userData"), "tesseract");
+      if (fs.existsSync(bundled)) {
+        langPath = process.resourcesPath;
+      }
+      // If not bundled, leave langPath undefined → tesseract auto-downloads from CDN
     } else {
       langPath = path.join(__dirname, "../../..");
     }
