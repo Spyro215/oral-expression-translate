@@ -172,16 +172,18 @@ function setupIpc() {
 
   ipcMain.handle("ocr:image", async (_event, imageDataUrl: string) => {
     let langPath: string | undefined;
+    let gzip = true; // default for CDN (hosts .traineddata.gz)
     if (app.isPackaged) {
       const bundled = path.join(process.resourcesPath, "eng.traineddata");
       if (fs.existsSync(bundled)) {
         langPath = process.resourcesPath;
+        gzip = false; // bundled file is uncompressed
       }
-      // If not bundled, leave langPath undefined → tesseract auto-downloads from CDN
     } else {
       langPath = path.join(__dirname, "../../..");
+      gzip = false; // dev uses uncompressed local file
     }
-    const worker = await createWorker("eng", undefined, { langPath });
+    const worker = await createWorker("eng", undefined, { langPath, gzip });
     try {
       const result = await worker.recognize(imageDataUrl);
       return {
