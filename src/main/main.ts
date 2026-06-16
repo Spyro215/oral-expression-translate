@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { app, BrowserWindow, clipboard, desktopCapturer, globalShortcut, ipcMain, Menu, nativeImage, screen, Tray } from "electron";
@@ -170,9 +171,14 @@ function setupIpc() {
   ipcMain.handle("clipboard:write", (_event, text: string) => clipboard.writeText(text));
 
   ipcMain.handle("ocr:image", async (_event, imageDataUrl: string) => {
-    const langPath = app.isPackaged
-      ? process.resourcesPath
-      : path.join(__dirname, "../../..");
+    let langPath: string;
+    if (app.isPackaged) {
+      // Try bundled traineddata first; if missing, use userData so tesseract can auto-download
+      const bundled = path.join(process.resourcesPath, "eng.traineddata");
+      langPath = fs.existsSync(bundled) ? process.resourcesPath : path.join(app.getPath("userData"), "tesseract");
+    } else {
+      langPath = path.join(__dirname, "../../..");
+    }
     const worker = await createWorker("eng", undefined, { langPath });
     try {
       const result = await worker.recognize(imageDataUrl);
