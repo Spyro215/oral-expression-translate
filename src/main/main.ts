@@ -164,10 +164,10 @@ function setupIpc() {
   ipcMain.handle("capture:full-screen", () => captureFullScreen());
   ipcMain.handle("capture:start", () => createCaptureWindow());
   ipcMain.handle("capture:close", () => captureWindow?.close());
-  ipcMain.handle("window:show-result", () => createResultWindow("result"));
+  ipcMain.handle("window:show-result", async () => { await createResultWindow("result"); });
   ipcMain.handle("window:minimize", () => resultWindow?.minimize());
   ipcMain.handle("app:quit", () => { isQuitting = true; app.quit(); });
-  ipcMain.handle("view:open", (_event, view: AppView) => createResultWindow(view));
+  ipcMain.handle("view:open", async (_event, view: AppView) => { await createResultWindow(view); });
   ipcMain.handle("clipboard:write", (_event, text: string) => clipboard.writeText(text));
 
   ipcMain.handle("ocr:image", async (_event, imageDataUrl: string) => {
