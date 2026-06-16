@@ -26,10 +26,15 @@
       {
         "from": "eng.traineddata",
         "to": "eng.traineddata"
+      },
+      {
+        "from": "assets/icon.ico",
+        "to": "icon.ico"
       }
     ],
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "assets/icon.ico"
     },
     "nsis": {
       "oneClick": false,
@@ -55,6 +60,7 @@
     "@types/react-dom": "^19.0.0",
     "electron": "37.10.3",
     "electron-builder": "^26.15.3",
+    "sharp": "^0.35.1",
     "typescript": "^5.8.0"
   }
 }

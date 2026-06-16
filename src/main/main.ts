@@ -1,5 +1,5 @@
 import path from "node:path";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import { pathToFileURL } from "node:url";
 import { app, BrowserWindow, clipboard, desktopCapturer, globalShortcut, ipcMain, Menu, nativeImage, screen, Tray } from "electron";
 import { createWorker } from "tesseract.js";
 import type { AppView } from "../shared/types";
@@ -15,6 +15,11 @@ let isQuitting = false;
 
 const isDev = process.env.NODE_ENV === "development";
 const devUrl = "http://127.0.0.1:5173";
+
+function iconPath() {
+  if (app.isPackaged) return path.join(process.resourcesPath, "icon.ico");
+  return path.join(__dirname, "../../../assets/icon.ico");
+}
 
 function preloadPath() {
   return path.join(__dirname, "../preload/preload.js");
@@ -43,6 +48,7 @@ async function createResultWindow(view: AppView = "result") {
     alwaysOnTop: true,
     skipTaskbar: false,
     backgroundColor: "#f7f7f2",
+    icon: iconPath(),
     webPreferences: {
       preload: preloadPath(),
       contextIsolation: true,
@@ -87,6 +93,7 @@ async function createCaptureWindow() {
     resizable: false,
     movable: false,
     hasShadow: false,
+    icon: iconPath(),
     webPreferences: {
       preload: preloadPath(),
       contextIsolation: true,
@@ -106,11 +113,9 @@ async function createCaptureWindow() {
 }
 
 function setupTray() {
-  const icon = nativeImage.createFromDataURL(
-    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAIklEQVR4AWMY+Y8BD2AcNWDUgFEDRg0YNWB0QFMDhgYAVqYCHbLLf+QAAAAASUVORK5CYII="
-  );
+  const icon = nativeImage.createFromPath(iconPath()).resize({ width: 16, height: 16 });
   tray = new Tray(icon);
-  tray.setToolTip("English expression translator");
+  tray.setToolTip("Oral Expression Translate");
   tray.setContextMenu(
     Menu.buildFromTemplate([
       { label: "Capture Translate", click: () => createCaptureWindow() },
